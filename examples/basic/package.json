@@ -1,0 +1,21 @@
+{
+  "name": "@geometra/auth-example-basic",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "server": "tsx server.ts",
+    "client": "vite --config vite.config.ts",
+    "dev": "echo 'Run: npm run server  (terminal 1)  &&  npm run client  (terminal 2)'"
+  },
+  "dependencies": {
+    "@geometra/core": "*",
+    "@geometra/server": "*",
+    "@geometra/client": "*",
+    "@geometra/renderer-canvas": "*",
+    "@geometra/auth": "file:../../"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "vite": "^8.0.3"
+  }
+}

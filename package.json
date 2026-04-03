@@ -34,7 +34,11 @@
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "check": "tsc --noEmit",
-    "test": "bun test src/**/*.test.ts"
+    "test": "bun test src/**/*.test.ts",
+    "example": "npm run example:install && concurrently -n server,client -c green,cyan \"npm run example:server\" \"npm run example:client\"",
+    "example:install": "cd examples/basic && npm install",
+    "example:server": "cd examples/basic && npm run server",
+    "example:client": "cd examples/basic && npm run client"
   },
   "peerDependencies": {
     "@geometra/client": ">=1.0.0",
@@ -49,6 +53,7 @@
     "@geometra/client": "file:../geometra/packages/client",
     "@geometra/renderer-canvas": "file:../geometra/packages/renderer-canvas",
     "@geometra/server": "file:../geometra/packages/server",
+    "concurrently": "^9.1.0",
     "@types/bun": "latest",
     "@types/node": "^25.5.1",
     "typescript": "^5.7.0"
