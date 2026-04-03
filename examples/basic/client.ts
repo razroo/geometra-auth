@@ -8,18 +8,44 @@ const TOKENS: Record<string, string> = {
 }
 
 const canvas = document.getElementById('app') as HTMLCanvasElement
-const statusEl = document.getElementById('status') as HTMLDivElement
+const logEl = document.getElementById('log') as HTMLDivElement
+const roleLabel = document.getElementById('role-label') as HTMLSpanElement
+const roleBadge = document.getElementById('role-badge') as HTMLSpanElement
 
 let renderer: CanvasRenderer | null = null
 let client: { close(): void; layout: unknown } | null = null
+let currentRole: string | null = null
 
-function log(msg: string) {
-  statusEl.textContent = (statusEl.textContent ?? '') + msg + '\n'
-  statusEl.scrollTop = statusEl.scrollHeight
+function logEntry(type: 'info' | 'success' | 'warn' | 'error' | 'block', msg: string) {
+  const icons = { info: '→', success: '✓', warn: '⚠', error: '✗', block: '⛔' }
+  const colors = { info: '#71717a', success: '#22c55e', warn: '#f59e0b', error: '#ef4444', block: '#f97316' }
+  const el = document.createElement('div')
+  el.style.color = colors[type]
+  el.style.padding = '2px 0'
+  el.textContent = `${icons[type]} ${msg}`
+  logEl.appendChild(el)
+  logEl.scrollTop = logEl.scrollHeight
 }
 
-function clearStatus() {
-  statusEl.textContent = ''
+function clearLog() {
+  logEl.innerHTML = ''
+}
+
+function setRole(role: string | null, status: 'connected' | 'rejected' | 'none') {
+  currentRole = role
+  if (status === 'none') {
+    roleLabel.textContent = 'Not connected'
+    roleBadge.textContent = ''
+    roleBadge.className = 'badge'
+  } else if (status === 'rejected') {
+    roleLabel.textContent = 'Connection rejected'
+    roleBadge.textContent = '4001'
+    roleBadge.className = 'badge badge-error'
+  } else {
+    roleLabel.textContent = `Connected as`
+    roleBadge.textContent = role!
+    roleBadge.className = `badge badge-${role}`
+  }
 }
 
 async function connectAs(role: string) {
@@ -32,10 +58,13 @@ async function connectAs(role: string) {
     renderer = null
   }
 
-  clearStatus()
+  clearLog()
+  setRole(null, 'none')
 
   const token = TOKENS[role] ?? role
-  log(`Connecting as "${role}"…`)
+
+  logEntry('info', `Sending WebSocket handshake with token…`)
+  logEntry('info', `Token: "${token.slice(0, 20)}${token.length > 20 ? '…' : ''}"`)
 
   renderer = new CanvasRenderer({ canvas, background: '#1a1a2e' })
 
@@ -52,32 +81,43 @@ async function connectAs(role: string) {
     canvas,
     reconnect: false,
     onAuthRejected: () => {
-      log(`✗ Connection rejected — token not recognized`)
+      setRole(role, 'rejected')
+      logEntry('error', `Server closed connection with code 4001`)
+      logEntry('error', `Token verification failed — connection refused`)
+      logEntry('info', `The server's verify() returned null for this token`)
     },
     onForbidden: () => {
-      log(`⛔ Server rejected event: Forbidden`)
-      log(`   (viewer role cannot send input events)`)
+      logEntry('block', `Server blocked event → responded with "Forbidden"`)
+      logEntry('block', `Policy for "${currentRole}" role only allows: resize`)
     },
     onError: (err) => {
       const msg = err instanceof Error ? err.message : String(err)
-      log(`❌ Error: ${msg}`)
+      if (msg !== 'Forbidden') {
+        logEntry('error', msg)
+      }
     },
   })
 
-  // Detect successful connection by polling for received layout
   let checks = 0
   const poll = setInterval(() => {
     checks++
     if (client?.layout) {
       clearInterval(poll)
-      log(`✓ Connected as ${role} — receiving geometry frames`)
-      if (role === 'viewer') {
-        log(`  (try clicking the button — it will be rejected)`)
+      setRole(role, 'connected')
+      logEntry('success', `Token verified — server assigned role: "${role}"`)
+      logEntry('success', `Receiving geometry frames from server`)
+      if (role === 'admin') {
+        logEntry('info', `Admin has no policy restrictions — try clicking "Increment"`)
+      } else if (role === 'viewer') {
+        logEntry('warn', `Viewer policy: { allow: ['resize'] }`)
+        logEntry('info', `Try clicking "Increment" — server will block the event`)
       }
     } else if (checks > 20) {
       clearInterval(poll)
       if (!client?.layout) {
-        log(`✗ Connection failed — server rejected (code 4001)`)
+        setRole(role, 'rejected')
+        logEntry('error', `Server closed connection with code 4001`)
+        logEntry('error', `Token verification failed — connection refused`)
       }
     }
   }, 100)

@@ -4,7 +4,7 @@ export default defineConfig({
   root: import.meta.dirname,
   build: {
     rollupOptions: {
-      input: 'client.html',
+      input: 'index.html',
     },
   },
 })

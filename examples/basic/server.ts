@@ -1,10 +1,14 @@
 import { signal, box, text } from '@geometra/core/node'
 import { createServer } from '@geometra/server'
 import { createAuth, staticTokens } from '@geometra/auth'
+import type { TexturaServer } from '@geometra/server'
 
 // ─── App State ──────────────────────────────────────────────────────────────
 const count = signal(0)
 const connectedClients = signal(0)
+
+// Forward-declare so onClick and auth callbacks can call server.update()
+let server: TexturaServer
 
 function view() {
   return box(
@@ -51,6 +55,7 @@ function view() {
             alignSelf: 'flex-start',
             onClick: () => {
               count.set(count.peek() + 1)
+              server.update()
             },
           },
           [
@@ -62,13 +67,6 @@ function view() {
             }),
           ],
         ),
-        box({ height: 8 }, []),
-        text({
-          text: 'Admins can click the button. Viewers receive "Forbidden".',
-          font: '13px Inter, system-ui',
-          lineHeight: 18,
-          color: '#555',
-        }),
       ]),
     ],
   )
@@ -81,23 +79,23 @@ const auth = createAuth({
     'viewer-token-demo': 'viewer',
   }),
 
-  // Viewers can only receive frames — block all input events
+  // Viewers can only send resize — all input events (click, key, etc.) blocked
   policies: {
     viewer: { allow: ['resize'] },
   },
 
   onAccept: (ctx) => {
-    console.log(`[auth] accepted — role: ${ctx.role}`)
+    console.log(`[auth] ✓ accepted — role: ${ctx.role}`)
     connectedClients.set(connectedClients.peek() + 1)
     server.update()
   },
 
   onReject: (reason) => {
-    console.log(`[auth] rejected — ${reason}`)
+    console.log(`[auth] ✗ rejected — ${reason}`)
   },
 
   onBlock: (messageType, ctx) => {
-    console.log(`[auth] blocked ${messageType} from ${ctx.role}`)
+    console.log(`[auth] ⛔ blocked "${messageType}" from ${ctx.role}`)
   },
 
   onLeave: (ctx) => {
@@ -108,7 +106,7 @@ const auth = createAuth({
 })
 
 // ─── Server ─────────────────────────────────────────────────────────────────
-const server = await createServer(view, {
+server = await createServer(view, {
   port: 3100,
   width: 460,
   height: 340,
@@ -122,7 +120,7 @@ console.log(`
 
   Tokens:
     admin  → admin-token-demo   (full access)
-    viewer → viewer-token-demo  (read-only, events rejected)
+    viewer → viewer-token-demo  (read-only, events blocked)
     other  → connection refused (4001)
 
   Run the client:  npm run client  (in another terminal)

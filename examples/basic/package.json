@@ -8,10 +8,10 @@
     "dev": "echo 'Run: npm run server  (terminal 1)  &&  npm run client  (terminal 2)'"
   },
   "dependencies": {
-    "@geometra/core": "*",
-    "@geometra/server": "*",
-    "@geometra/client": "*",
-    "@geometra/renderer-canvas": "*",
+    "@geometra/core": "file:../../../geometra/packages/core",
+    "@geometra/server": "file:../../../geometra/packages/server",
+    "@geometra/client": "file:../../../geometra/packages/client",
+    "@geometra/renderer-canvas": "file:../../../geometra/packages/renderer-canvas",
     "@geometra/auth": "file:../../"
   },
   "devDependencies": {

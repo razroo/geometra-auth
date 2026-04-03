@@ -25,11 +25,7 @@
   "packages": {
     "@geometra/client": ["@geometra/client@file:../geometra/packages/client", { "dependencies": { "@geometra/core": "file:../core" } }],
 
-    "@geometra/client": ["@geometra/client@file:../geometra/packages/client", { "dependencies": { "@geometra/core": "file:../core" } }],
-
     "@geometra/renderer-canvas": ["@geometra/renderer-canvas@file:../geometra/packages/renderer-canvas", { "dependencies": { "@geometra/client": "file:../client", "@geometra/core": "file:../core" } }],
-
-    "@geometra/server": ["@geometra/server@file:../geometra/packages/server", { "dependencies": { "@geometra/core": "file:../core", "ws": "^8.18.0" }, "devDependencies": { "@types/ws": "^8.5.13" } }],
 
     "@geometra/server": ["@geometra/server@file:../geometra/packages/server", { "dependencies": { "@geometra/core": "file:../core", "ws": "^8.18.0" }, "devDependencies": { "@types/ws": "^8.5.13" } }],
 
@@ -97,18 +93,12 @@
 
     "@geometra/client/@geometra/core": ["@geometra/core@file:../geometra/packages/core", {}],
 
-    "@geometra/client/@geometra/core": ["@geometra/core@file:../geometra/packages/core", {}],
-
-    "@geometra/renderer-canvas/@geometra/client": ["@geometra/client@file:../geometra/packages/client", { "dependencies": { "@geometra/core": "file:../core" } }],
+    "@geometra/renderer-canvas/@geometra/client": ["@geometra/client@file:../geometra/packages/client", {}],
 
     "@geometra/renderer-canvas/@geometra/core": ["@geometra/core@file:../geometra/packages/core", {}],
 
     "@geometra/server/@geometra/core": ["@geometra/core@file:../geometra/packages/core", {}],
 
-    "@geometra/server/@geometra/core": ["@geometra/core@file:../geometra/packages/core", {}],
-
     "chalk/supports-color": ["supports-color@7.2.0", "", { "dependencies": { "has-flag": "^4.0.0" } }, "sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw=="],
-
-    "@geometra/renderer-canvas/@geometra/client/@geometra/core": ["@geometra/core@file:../geometra/packages/core", {}],
   }
 }
