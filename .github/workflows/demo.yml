@@ -27,6 +27,13 @@ jobs:
         with:
           node-version: '22'
 
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install and build @geometra/auth
+        run: bun install && bun run build
+
       - name: Install example dependencies
         run: cd examples/basic && npm install
 

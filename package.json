@@ -1,6 +1,6 @@
 {
   "name": "@geometra/auth",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Token-based WebSocket authentication for Geometra server/client",
   "license": "MIT",
   "type": "module",
@@ -33,6 +33,7 @@
   ],
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepublishOnly": "npm run build",
     "check": "tsc --noEmit",
     "test": "bun test src/**/*.test.ts",
     "example": "npm run example:install && concurrently -n server,client -c green,cyan \"npm run example:server\" \"npm run example:client\"",
