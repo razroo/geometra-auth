@@ -2,6 +2,10 @@
 
 Token-based WebSocket authentication for [Geometra](https://github.com/razroo/geometra) server/client apps.
 
+**[Live Demo](https://razroo.github.io/geometra-auth/)** | [Source](https://github.com/razroo/geometra-auth/tree/main/examples/basic)
+
+> The demo client is hosted on GitHub Pages. To see it in action, run the example server locally with `npm run example` and open the page.
+
 Because Geometra's server computes all layout and streams pre-computed geometry to clients, auth lives at the **protocol layer** — the server controls what each connection can see and do at the frame level.
 
 ## Install
