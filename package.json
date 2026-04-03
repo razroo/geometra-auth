@@ -1,0 +1,56 @@
+{
+  "name": "@geometra/auth",
+  "version": "0.1.0",
+  "description": "Token-based WebSocket authentication for Geometra server/client",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/razroo/geometra-auth"
+  },
+  "keywords": [
+    "geometra",
+    "auth",
+    "websocket",
+    "token",
+    "rbac",
+    "dom-free"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "check": "tsc --noEmit",
+    "test": "bun test src/**/*.test.ts"
+  },
+  "peerDependencies": {
+    "@geometra/client": ">=1.0.0",
+    "@geometra/server": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@geometra/client": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@geometra/client": "file:../geometra/packages/client",
+    "@geometra/renderer-canvas": "file:../geometra/packages/renderer-canvas",
+    "@geometra/server": "file:../geometra/packages/server",
+    "@types/bun": "latest",
+    "@types/node": "^25.5.1",
+    "typescript": "^5.7.0"
+  }
+}
