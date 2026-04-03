@@ -73,6 +73,11 @@ export async function connectWithAuth(options: AuthClientOptions) {
     renderer: renderer as never,
     canvas,
     reconnect,
+    onClose: (ev: { code: number }) => {
+      if (ev.code === 4001) {
+        onAuthRejected?.()
+      }
+    },
     onError: (err: unknown) => {
       const msg = err instanceof Error ? err.message : String(err)
 

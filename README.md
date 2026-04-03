@@ -2,7 +2,12 @@
 
 Token-based WebSocket authentication for [Geometra](https://github.com/razroo/geometra) server/client apps.
 
-**[Live Demo](https://razroo.github.io/geometra-auth/)** | [Source](https://github.com/razroo/geometra-auth/tree/main/examples/basic)
+**[Live Demo](https://razroo.github.io/geometra-auth/)** | [Source](https://github.com/razroo/geometra-auth/tree/main/examples/basic) | [Geometra auth contract](https://github.com/razroo/geometra/blob/main/PLATFORM_AUTH.md) | [Token registry](https://github.com/razroo/geometra-token-registry)
+
+Related packages:
+
+- **[geometra](https://github.com/razroo/geometra)** — `createServer` / `createClient`; see **`PLATFORM_AUTH.md`** for close codes **4001** (handshake rejected) and **4003** (forbidden message), refresh, and what stays out of core.
+- **[geometra-token-registry](https://github.com/razroo/geometra-token-registry)** — HTTP **`POST /verify`** for production **`remoteVerifier()`**; mint/revoke tokens via admin API.
 
 > The demo client is hosted on GitHub Pages. To see it in action, run the example server locally with `npm run example` and open the page.
 
@@ -81,10 +86,12 @@ const client = await connectWithAuth({
   url: 'ws://localhost:3100',
   renderer,
   canvas,
-  onAuthRejected: () => console.log('invalid token'),
+  onAuthRejected: () => console.log('invalid token'), // WebSocket closed with 4001
   onForbidden: (err) => console.log('action blocked by server'),
 })
 ```
+
+`onAuthRejected` runs when the server rejects the upgrade (**`4001`**). `@geometra/client` does not auto-reconnect after **`4001`**. Token refresh: obtain a new token, then open a new connection (see Geometra **`PLATFORM_AUTH.md`**).
 
 ## Role Policies
 

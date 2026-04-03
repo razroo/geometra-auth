@@ -36,3 +36,8 @@ bun run build    # tsc → dist/
 ## Relationship to Geometra
 
 Lives alongside the main Geometra repo at `../geometra`. Dev dependencies link to Geometra packages via `file:../geometra/packages/*`. For publishing, these become standard semver peer dependencies (`>=1.0.0`).
+
+Cross-repo docs:
+
+- Geometra **`PLATFORM_AUTH.md`** — full stack contract (this package + [`geometra-token-registry`](https://github.com/razroo/geometra-token-registry)), WebSocket codes, refresh.
+- Geometra **`INTEGRATION_COOKBOOK.md`** — links to the same for thin-client deployments.

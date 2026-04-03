@@ -42,7 +42,7 @@
     "example:client": "cd examples/basic && npm run client"
   },
   "peerDependencies": {
-    "@geometra/client": ">=1.0.0",
+    "@geometra/client": ">=1.1.2",
     "@geometra/server": ">=1.0.0"
   },
   "peerDependenciesMeta": {
