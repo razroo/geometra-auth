@@ -1,6 +1,6 @@
 {
   "name": "@geometra/auth",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Token-based WebSocket authentication for Geometra server/client",
   "license": "MIT",
   "type": "module",
